@@ -104,9 +104,18 @@ elif (( pct < 90 )); then cx=$ORG
 else                      cx=$RED; fi
 barw=10
 fill=$(( pct * barw / 100 )); (( fill > barw )) && fill=$barw
+rem=$(( (pct * barw) % 100 ))   # fractional last block: ▓ ≥75, ▒ ≥50, ░ ≥25
 bar=""
 for ((i=0;i<barw;i++)); do
-  (( i < fill )) && bar+="█" || bar+="░"
+  if   (( i < fill ));  then bar+="█"
+  elif (( i == fill )); then
+    if   (( rem >= 75 )); then bar+="▓"
+    elif (( rem >= 50 )); then bar+="▒"
+    elif (( rem >= 25 )); then bar+="░"
+    else                       bar+="·"
+    fi
+  else bar+="·"
+  fi
 done
 ctx_str="${cx}${bar} ${pct}%${R}"
 [[ $EXCEEDS == "true" ]] && ctx_str+=" ${RED}${B}⚠200k${R}"

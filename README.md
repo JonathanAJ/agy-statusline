@@ -13,7 +13,7 @@ While the agent is generating, the state segment updates live:
 With git info and badges active, the full wide layout looks like:
 
 ```text
-● ready │ 3.7 Flash·High │ ~/my-project │  main✚⇡2 │ █░░░░░░░░░ 14% 88k↑ 61k↓ │ ◔ 93%·6d11h Pro │ ▶1 ✦2 │ PLAN
+● ready │ 3.7 Flash·High │ ~/my-project │  main✚⇡2 │ █░········ 14% 88k↑ 61k↓ │ ◔ 93%·6d11h Pro │ ▶1 ✦2 │ PLAN
 ```
 
 ## What it shows
@@ -24,7 +24,7 @@ With git info and badges active, the full wide layout looks like:
 | `3.7 Flash·High` | Active model, compacted (`Gemini 3.7 Flash (High)` → `3.7 Flash·High`) |
 | `~/my-project` | Working directory, `~`-shortened, last two path components |
 | ` main✚⇡2⇣1` | Git branch; `✚` dirty, `⇡`/`⇣` commits ahead/behind upstream (live `git` check) |
-| `█░░░░░░░░░ 14%` | Context window usage bar — green → yellow → orange → red as it fills |
+| `█░········ 14%` | Context window usage bar — green → yellow → orange → red as it fills |
 | `88k↑ 61k↓` | Total input/output tokens, humanized |
 | `⚠200k` | Bold red badge when the conversation exceeds 200k tokens |
 | `◔ 93%·6d11h Pro` | Your **tightest** quota bucket, time until it resets, and plan tier |
