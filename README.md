@@ -4,6 +4,14 @@ A fast, adaptive status line for the [Antigravity CLI](https://antigravity.googl
 
 One `jq` pass, pure bash, zero dependencies beyond `jq` — and it degrades gracefully on malformed or missing input instead of erroring into your prompt.
 
+![agy-statusline in the idle state](docs/screenshot-ready.png)
+
+While the agent is generating, the state segment updates live:
+
+![agy-statusline in the working state](docs/screenshot-working.png)
+
+With git info and badges active, the full wide layout looks like:
+
 ```text
 ● ready │ 3.7 Flash·High │ ~/my-project │  main✚⇡2 │ █░░░░░░░░░ 14% 88k↑ 61k↓ │ ◔ 93%·6d11h Pro │ ▶1 ✦2 │ PLAN
 ```
