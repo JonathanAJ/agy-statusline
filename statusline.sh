@@ -5,11 +5,14 @@
 
 set -u
 input=$(cat)
+if [[ -n "${AGY_DEBUG:-}" || -f /tmp/agy_statusline_debug ]]; then
+  printf '%s\n' "$input" > /tmp/agy_statusline_last.json 2>/dev/null || true
+fi
 
 # ---- parse everything in one jq pass -----------------------------------------
 # \x1f (unit separator) keeps empty fields aligned — tab-IFS would collapse them
 IFS=$'\x1f' read -r STATE MODEL DIR WIDTH CTX_PCT CTX_SIZE IN_TOK OUT_TOK \
-  VCS_TYPE BRANCH DIRTY SANDBOX ARTIFACTS TASKS SUBAGENTS EXEC_MODE TIER \
+  VCS_TYPE BRANCH DIRTY SANDBOX ARTIFACTS TASKS SUBAGENTS CYCLE_MODE TIER \
   QUOTA_FRAC QUOTA_RESET EXCEEDS VIM_MODE <<EOF || true
 $(jq -r '
   def n0: . // 0;
@@ -29,7 +32,7 @@ $(jq -r '
     (.artifact_count | n0),
     (.task_count | n0),
     ((.subagents // []) | length),
-    (.execution_mode // ""),
+    (.cycle_mode // ""),
     (.plan_tier // ""),
     (([.quota // {} | to_entries[].value] | min_by(.remaining_fraction) | .remaining_fraction) // ""),
     (([.quota // {} | to_entries[].value] | min_by(.remaining_fraction) | .reset_in_seconds) // ""),
@@ -43,7 +46,7 @@ STATE=${STATE:-idle}; MODEL=${MODEL:-?}; DIR=${DIR:-}; WIDTH=${WIDTH:-80}
 CTX_PCT=${CTX_PCT:-0}; IN_TOK=${IN_TOK:-0}; OUT_TOK=${OUT_TOK:-0}
 VCS_TYPE=${VCS_TYPE:-}; BRANCH=${BRANCH:-}; DIRTY=${DIRTY:-false}
 SANDBOX=${SANDBOX:-false}; ARTIFACTS=${ARTIFACTS:-0}; TASKS=${TASKS:-0}
-SUBAGENTS=${SUBAGENTS:-0}; EXEC_MODE=${EXEC_MODE:-}; TIER=${TIER:-}
+SUBAGENTS=${SUBAGENTS:-0}; CYCLE_MODE=${CYCLE_MODE:-}; TIER=${TIER:-}
 QUOTA_FRAC=${QUOTA_FRAC:-}; QUOTA_RESET=${QUOTA_RESET:-}
 EXCEEDS=${EXCEEDS:-false}; VIM_MODE=${VIM_MODE:-}
 
@@ -155,10 +158,11 @@ extras=""
 extras=${extras% }
 
 mode_str=""
-if [[ -n $EXEC_MODE && $EXEC_MODE != "null" ]]; then
-  case "$EXEC_MODE" in
-    planning) mode_str="${MAG}${B}PLAN${R}" ;;
-    *)        mode_str="${DIM}$(tr '[:lower:]' '[:upper:]' <<<"$EXEC_MODE")${R}" ;;
+if [[ -n $CYCLE_MODE && $CYCLE_MODE != "null" && $CYCLE_MODE != "default" ]]; then
+  case "$CYCLE_MODE" in
+    plan)         mode_str="${MAG}${B}PLAN${R}" ;;
+    accept-edits) mode_str="${YLW}${B}ACCEPT-EDITS${R}" ;;
+    *)            mode_str="${DIM}$(tr '[:lower:]' '[:upper:]' <<<"$CYCLE_MODE")${R}" ;;
   esac
 fi
 

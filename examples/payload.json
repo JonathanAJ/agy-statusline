@@ -47,5 +47,5 @@
   "email": "developer@example.com",
   "task_count": 1,
   "terminal_width": 140,
-  "execution_mode": "planning"
+  "cycle_mode": "plan"
 }

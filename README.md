@@ -76,6 +76,14 @@ Then add to `~/.gemini/antigravity-cli/settings.json`:
 
 Optional `statusLine` keys supported by Antigravity: `padding` (blank lines above), `enabled` (toggle), `stack_with_default` (render below the built-in line).
 
+## Uninstall
+
+```bash
+./uninstall.sh
+```
+
+The uninstaller removes `statusline.sh` from `~/.gemini/antigravity-cli/` and removes the `statusLine` configuration from `settings.json` (preserving a backup at `settings.json.bak`).
+
 ## Try it without installing
 
 The CLI pipes a JSON state payload to the script's stdin and renders its stdout. A sample payload is included:
